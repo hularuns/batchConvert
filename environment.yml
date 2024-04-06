@@ -5,6 +5,7 @@ channels:
 dependencies:
   - python
   - geopandas
+  - pywin32
   # - cartopy>=0.21
   # - jupyterlab
   # - ipywidgets
