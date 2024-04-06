@@ -58,6 +58,7 @@ class convertGui:
         self.outputButton = ttk.Button(self.mainWindow, text='Output Directory', command=self.selectOutputDirectory)
         self.outputButton.place(x=100, y=175)
         self.outputPathLabel = ttk.Label(self.mainWindow, text='No output directory selected')
+        self.outputPathLabel.place(x=100, y=200)
 
     #for select input directory button.
     def selectInputDirectory(self):
@@ -72,7 +73,7 @@ class convertGui:
         self.outputPath = askdirectory(title="Output directory for converted files")
         #dynamically shows output directory if one is selected
         if self.outputPath:
-            self.outputPath(text=self.outputPath)
+            self.outputPathLabel.config(text=self.outputPath)
 
     def submitSelection(self):
     
@@ -92,5 +93,4 @@ class convertGui:
         self.mainWindow.mainloop()
  
 convertFrontEnd = convertGui()
-convertFrontEnd.run
-
+convertFrontEnd.run()
