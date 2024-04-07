@@ -14,11 +14,15 @@ The installation will involve installing a conda environment which makes use of 
 
 ### Installing
 #### Pip install
-Install geopandas using *`pip install geopandas`.
+Install geopandas using `pip install geopandas`.
 
 #### Conda Environment
 
-You can also create a conda environment using Python 3 and above using the [environment.yml](environment.yml). Open the acaconda prompt and navigate to the project folder, e.g. *C:/Users/(username)/projects/batchConvert*, type the following into the prompt to create a conda environment for the batch convert tool.
+You can also create a conda environment using Python 3 and above using the [environment.yml](environment.yml). 
+
+Open the acaconda prompt and navigate to the project folder, e.g. *C:/Users/(username)/projects/batchConvert*.
+
+Then type the following into the prompt to create a conda environment for the batch convert tool.
 
 ```
 conda env create --file=environment.yml
@@ -26,7 +30,8 @@ conda env create --file=environment.yml
 conda activate batchConvert
 ```
 
-Once the environment has been activated, in your anaconda prompt you should see *(batchConvert) C:\Users\(username)\projects\batchConvert*
+Once the environment has been activated, in your anaconda prompt you should see:
+`(batchConvert) C:\Users\(username)\projects\batchConvert`
 
 To run the batch convert tool, type the following within the anaconda prompt with the batchConvert environment activated.
 
