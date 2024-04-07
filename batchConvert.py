@@ -104,23 +104,35 @@ convertFrontEnd = convertGui()
 convertFrontEnd.run()
 
 def batchConvert(guiInput):
+    #reads gis input file
+    gdf = gpd.read_file(fullPath)
+    #Handles differently converting to geopackage.
+    if convertFrontEnd.conversionDriver == 'GPKG':
+                # file name and path creation
+        outputFileName = 'Converted.gpkg'
+        outputFullPath = os.path.join(guiInput.outputPath, outputFileName)
+        for file in os.listdir(guiInput.inputPath):
+            if file.endswith(".shp"):
+                fullPath = os.path.join(guiInput.inputPath, file)
+
+                tableName = os.path.splitext(os.path.basename(fullPath))[0] #removes directory path for just layer name
+                # Creates geopackage, then will append additional layers.
+                gdf.to_file(outputFullPath, layer=tableName, driver = 'GPKG')
+                print(f"Converted {file} to GeoJSON and saved as {outputFileName}")
     # Select files by just .shp
     # https://stackoverflow.com/questions/3964681/find-all-files-in-a-directory-with-extension-txt-in-python
     # shape file conversion: https://stackoverflow.com/questions/43119040/shapefile-into-geojson-conversion-python-3
-    for file in os.listdir(guiInput.inputPath):
-        if file.endswith(".shp"):
-            fullPath = os.path.join(guiInput.inputPath, file)
+    else:
+        for file in os.listdir(guiInput.inputPath):
+            if file.endswith(".shp"):
+                fullPath = os.path.join(guiInput.inputPath, file)
+               # file name and path creation
+                outputFileName = os.path.splitext(file)[0] + "." + str(guiInput.conversionDriver)
+                outputFullPath = os.path.join(guiInput.outputPath, outputFileName)
 
-            # reads it and stores it temporarily as a geodataframe.
-            gdf = gpd.read_file(fullPath)
+                gdf.to_file(outputFullPath, driver=str(guiInput.conversionDriver))
 
-            # file name and path creation
-            outputFileName = os.path.splitext(file)[0] + "." + str(guiInput.conversionDriver)
-            outputFullPath = os.path.join(guiInput.outputPath, outputFileName)
-
-            gdf.to_file(outputFullPath, driver=str(guiInput.conversionDriver))
-
-            print(f"Converted {file} to GeoJSON and saved as {outputFileName}")
+                print(f"Converted {file} to GeoJSON and saved as {outputFileName}")
 
 
 batchConvert(convertFrontEnd)
