@@ -1,6 +1,6 @@
 # GIS Batch Converter Tool
 
-A tool which will batch convert files from a range GIS file formats.
+A tool which will batch convert files from a range GIS file formats and common CRS.
 
 ## Getting Started
 
@@ -15,6 +15,7 @@ The installation will involve installing a conda environment which makes use of 
 ### Installing
 #### Pip install
 Install geopandas using `pip install geopandas`.
+Install cartopy using `pip install cartopy`.
 
 #### Conda Environment
 
