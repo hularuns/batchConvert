@@ -3,7 +3,9 @@
 # Add option to select which files or which depends which files are in the folder so it doesn't discriminate.
 # Make it so it can change 'any OGR file to any other OGR file'.
 
+import fiona.drvsupport
 import geopandas as gpd
+import fiona
 import os
 import sys
 # For GUI
@@ -12,16 +14,19 @@ from tkinter import ttk, messagebox
 from tkinter.filedialog import askdirectory
 import tkinter as tk
 
+
 # ---- GUI Class definition ----
 class convertGui:
 
     def __init__(self):
         # dict of formats to convert to and from with their file extension
+        # Print supported drivers and their capabilities
+
         self.driverOptionsDict = {
             'DXF': '.dxf', 'CSV': '.csv', 'OpenFileGDB': '.gbd',  'ESRIJSON': '.json', 'ESRI Shapefile': '.shp', 
             'FlatGeobuf': '.fgb', 'GeoJSON': '.geojson', 'GeoJSONSeq': '.geojsons', 'GPKG': '.gpkg', 'GML': '.gml',
-            'OGR_GMT': '.GMT', 'GPX': '.gpx', 'Idrisi': '.rst', 'MapInfo File': '.tab', 'DGN': '.dgn', 
-            'PCIDSK': '.pix',  'S57': '.000', 'SQLite': '.sqlite', 'TopoJSON': '.topojson'
+            'OGR_GMT': '.GMT', 'GPX': '.gpx', 'Idrisi': '.rst', 'MapInfo File': '.tab',
+            'DGN': '.dgn', 'PCIDSK': '.pix',  'S57': '.000', 'SQLite': '.sqlite', 'TopoJSON': '.topojson'
             }
         self.driverOptions = list(self.driverOptionsDict.keys())
  
@@ -112,34 +117,31 @@ convertFrontEnd.run()
 
 def batchConvert(guiInput):
     #Handles differently converting to geopackage.
-    if convertFrontEnd.conversionDriver == 'GPKG':
-                 # file name and path creation
-        outputFileName = 'Converted.gpkg'
-        outputFullPath = os.path.join(guiInput.outputPath, outputFileName)
-
-        for file in os.listdir(guiInput.inputPath):
-            #Only files with specific extensions selected from GUI are converted. Can have mixed folder.
-            if file.endswith(guiInput.inputDriverExt):
-                fullPath = os.path.join(guiInput.inputPath, file)
-                gdf = gpd.read_file(fullPath)
-                tableName = os.path.splitext(os.path.basename(fullPath))[0] #removes directory path for just layer name
-                # Creates geopackage, then will append additional layers using tableName
+    
+    for file in os.listdir(guiInput.inputPath):
+        if file.endswith(guiInput.inputDriverExt):
+            fullPath = os.path.join(guiInput.inputPath, file)
+            gdf = gpd.read_file(fullPath)
+            if guiInput.conversionDriver == 'GPKG':
+                outputFileName = 'Converted.gpkg'
+                outputFullPath = os.path.join(guiInput.inputPath, file)
+                tableName = os.path.splitext(os.path.basename(fullPath))[0] #obtains file name of each file adding as layer
+                #Create or append to geopackage, will change mode depending on if it exists or not.
                 gdf.to_file(outputFullPath, layer=tableName, driver = 'GPKG')
-                print(f"Converted {file} to GeoJSON and saved as {outputFileName}")
-    # https://stackoverflow.com/questions/3964681/find-all-files-in-a-directory-with-extension-txt-in-python
-    # shape file conversion: https://stackoverflow.com/questions/43119040/shapefile-into-geojson-conversion-python-3
-    else:
-        for file in os.listdir(guiInput.inputPath):
-            #Only files with specific extensions selected from GUI are converted. Can have mixed folder.
-            if file.endswith(guiInput.inputDriverExt):
-                fullPath = os.path.join(guiInput.inputPath, file)
-               # file name and path creation
+                print(f"Converted {file} to {guiInput.conversionDriver} and saved as a table within {outputFileName}")
+                
+                
+            else:
+                # file name and path creation
                 outputFileName = os.path.splitext(file)[0] + guiInput.conversionDriverExt
                 outputFullPath = os.path.join(guiInput.outputPath, outputFileName)
-                gdf = gpd.read_file(fullPath)
+                # Creates and saves converted file 
                 gdf.to_file(outputFullPath, driver=str(guiInput.conversionDriver))
-
                 print(f"Converted {file} to {guiInput.conversionDriver} and saved as {outputFileName}")
+    
+
+
+
 
 
 batchConvert(convertFrontEnd)
