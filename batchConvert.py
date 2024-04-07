@@ -114,16 +114,16 @@ convertFrontEnd.run()
 
 def batchConvert(guiInput):
     #reads gis input file
-    gdf = gpd.read_file(fullPath)
+
     #Handles differently converting to geopackage.
     if convertFrontEnd.conversionDriver == 'GPKG':
-                # file name and path creation
+                 # file name and path creation
         outputFileName = 'Converted.gpkg'
         outputFullPath = os.path.join(guiInput.outputPath, outputFileName)
         for file in os.listdir(guiInput.inputPath):
             if file.endswith(".shp"):
                 fullPath = os.path.join(guiInput.inputPath, file)
-
+                gdf = gpd.read_file(fullPath)
                 tableName = os.path.splitext(os.path.basename(fullPath))[0] #removes directory path for just layer name
                 # Creates geopackage, then will append additional layers.
                 gdf.to_file(outputFullPath, layer=tableName, driver = 'GPKG')
@@ -138,7 +138,7 @@ def batchConvert(guiInput):
                # file name and path creation
                 outputFileName = os.path.splitext(file)[0] + "." + str(guiInput.conversionDriver)
                 outputFullPath = os.path.join(guiInput.outputPath, outputFileName)
-
+                gdf = gpd.read_file(fullPath)
                 gdf.to_file(outputFullPath, driver=str(guiInput.conversionDriver))
 
                 print(f"Converted {file} to GeoJSON and saved as {outputFileName}")
