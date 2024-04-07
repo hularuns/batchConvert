@@ -7,7 +7,9 @@ A tool which will batch convert files from a range GIS file formats and conversi
 
 ### Prerequisites
 
-Anaconda and Python 3 will need to be installed prior to installation.
+Python 3 will need to be installed prior to installation.
+
+If you choose not to use `pip` conda will need to be installed.
 
 The installation will involve installing a conda environment which makes use of geopandas.
 

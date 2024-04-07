@@ -48,7 +48,7 @@ class convertGui:
 
         # main window UI of tkinter for conversion tool
     def conversionUI(self):
-        self.mainWindow.config(width=800, height=600)
+        self.mainWindow.config(width=800, height=500)
         self.mainWindow.title('GIS File Conversion')
 
         # Input conversion file type
@@ -62,27 +62,27 @@ class convertGui:
 
         # Conversion (convert to) file type
         comboConvertLabel = ttk.Label(self.mainWindow, text="Convert to:")
-        comboConvertLabel.place(x=350, y=25)
+        comboConvertLabel.place(x=450, y=25)
         self.comboConvert = ttk.Combobox(
             state='readonly',
             values=self.driverOptions
         )
-        self.comboConvert.place(x=350,y=50)
+        self.comboConvert.place(x=450,y=50)
 
         # CRS conversion drop down menu
         crsComboLabel = ttk.Label(self.mainWindow, text='Output CRS:')
-        crsComboLabel.place(x=350, y=100)
+        crsComboLabel.place(x=450, y=100)
         self.comboCrs = ttk.Combobox(
             state = 'readonly',
             values=self.crsOptions
         )
-        self.comboCrs.place(x=350, y=125)
+        self.comboCrs.place(x=450, y=125)
 
         # Submit button - very important to making it all run beyond this.
         submitLabel = ttk.Label(self.mainWindow, text= "Once options are selected, click Submit.")
-        submitLabel.place(x=180, y=275)
+        submitLabel.place(x=280, y=225)
         self.submitButton = ttk.Button(self.mainWindow, text="Submit", command=self.submitSelection)
-        self.submitButton.place(x=250, y=300)        
+        self.submitButton.place(x=350, y=250)        
 
         # Input filepath button choice with dynamic path label
         self.inputButton = ttk.Button(self.mainWindow, text = 'Input Directory', command=self.selectInputDirectory)
