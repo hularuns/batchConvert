@@ -26,7 +26,18 @@ class convertGui:
             'OGR_GMT': '.GMT', 'GPX': '.gpx', 'Idrisi': '.rst', 'MapInfo File': '.tab',
             'DGN': '.dgn', 'PCIDSK': '.pix',  'S57': '.000', 'SQLite': '.sqlite', 'TopoJSON': '.topojson'
             }
-        self.crsOptions = ["EPSG:4326", "EPSG:3857", "EPSG:4269", "EPSG:3857",]
+        self.crsOptions = [
+            "EPSG:25832 - ETRS89 / UTM zone 32N (Europe)",
+            "EPSG:27700 - OSGB36 (OS Great Britain 1936)",
+            "EPSG:29902 - TM65 / Irish Grid"
+            "EPSG:32633 - WGS 84 / UTM zone 33N",
+            "EPSG:32736 - WGS 84 / UTM zone 36S",
+            "EPSG:3857 - WGS 84 / Pseudo-Mercator",         
+            "EPSG:4258 - ETRS89 / Europe",         
+            "EPSG:4269 - NAD83 (North American Datum 1983)",
+            "EPSG:4326 - WGS 84 (Global GPS Coordinate System)",
+
+        ]
 
         self.driverOptions = list(self.driverOptionsDict.keys())
         self.conversionCrs = ''  # for use in batchConvert from interface choice
@@ -37,7 +48,7 @@ class convertGui:
 
         # main window UI of tkinter for conversion tool
     def conversionUI(self):
-        self.mainWindow.config(width=600, height=400)
+        self.mainWindow.config(width=800, height=600)
         self.mainWindow.title('GIS File Conversion')
 
         # Input conversion file type
@@ -109,10 +120,9 @@ class convertGui:
             # Returns input Driver and then returns extension
             self.inputDriver = self.comboInput.get()
             self.inputDriverExt = self.driverOptionsDict.get(self.inputDriver)
-            # Returns conversion CRS
-            selectedCrs = self.comboCrs.get()
- 
-            
+            # extracts just the EPSG value from the list. creates list of 2, fetches number.
+            self.conversionCrs =self.comboCrs.get().split('-')[0].split(':')[1].strip()
+            #closes the main window when Yes.
             self.mainWindow.destroy()
             messagebox.showinfo(title = 'Conversion Tool', message='Conversion going ahead!')
         # If select No -> False -> closes everything and stops script.
@@ -121,11 +131,6 @@ class convertGui:
             messagebox.showinfo(title= 'Conversion Tool', message='Conversion tool ended.')
             sys.exit()
         # If select Cancel -> None -> lets user continue and change settings.
-
-        self.conversionCrs = self.conversionCrs.get()
-        if not self.outputCRS.strip():
-            messagebox.showwarning("CRS Warning", 
-                                   "No output CRS specified. Converting without CRS transformation.")
 
     def run(self):
         self.mainWindow.mainloop()
@@ -142,14 +147,18 @@ def batchConvert(guiInput):
         if file.endswith(guiInput.inputDriverExt):
             fullPath = os.path.join(guiInput.inputPath, file)
             gdf = gpd.read_file(fullPath)
+            #converts if conversionCrs is true, otherwise won't convert.
+            if guiInput.conversionCrs:
+                gdf = gdf.to_crs(guiInput.conversionCrs)
+            
+            # this section converts file type.
             if guiInput.conversionDriver == 'GPKG':
-                outputFileName = 'Converted.gpkg'
+                outputFileName = 'Converted.gpkg' 
                 outputFullPath = os.path.join(guiInput.outputPath, outputFileName)
                 tableName = os.path.splitext(os.path.basename(file))[0] #obtains file name of each file adding as layer
                 #Create or append to geopackage, will change mode depending on if it exists or not.
                 gdf.to_file(outputFullPath, layer=tableName, driver = 'GPKG')
-                print(f"Converted {file} to {guiInput.conversionDriver} and saved as a table within {outputFileName} with CRS of {guiInput.conversionCrs}")
-                           
+                print(f"Converted {file} to {guiInput.conversionDriver} and saved as a table within {outputFileName} with CRS of {guiInput.conversionCrs}")           
             else:
                 # file name and path creation
                 outputFileName = os.path.splitext(file)[0] + guiInput.conversionDriverExt
