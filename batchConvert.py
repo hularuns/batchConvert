@@ -7,19 +7,28 @@ import geopandas as gpd
 import os
 import sys
 
+
 # These are for folder dialogue prompt
 # https://stackoverflow.com/questions/3964681/find-all-files-in-a-directory-with-extension-txt-in-python
 from tkinter import ttk, messagebox
 from tkinter.filedialog import askdirectory
 import tkinter as tk
 
+
+
+
 # ---- GUI Class definition ----
 class convertGui:
 
     def __init__(self):
-        self.driverOptions = ["DXF","CSV", "OpenFileGDB", "ESRIJSON", "ESRI Shapefile", "FlatGeobuf", 
-    "GeoJSON", "GeoJSONSeq", "GPKG","GML", "OGR_GMT","GPX","Idrisi","MapInfo File",
-    "DGN","PCIDSK","OGR_PDS","S57","SQLite","TopoJSON"]
+        # dict of formats to convert to and from with their file extension
+        self.driverOptionsDict = {
+            'DXF': '.dxf', 'CSV': '.csv', 'OpenFileGDB': '.gbd',  'ESRIJSON': '.json', 'ESRI Shapefile': '.shp', 
+            'FlatGeobuf': '.fgb', 'GeoJSON': '.geojson', 'GeoJSONSeq': '.geojsons', 'GPKG': '.gpkg', 'GML': '.gml',
+            'OGR_GMT': '.GMT', 'GPX': '.gpx', 'Idrisi': '.rst', 'MapInfo File': '.tab', 'DGN': '.dgn', 
+            'PCIDSK': '.pix',  'S57': '.000', 'SQLite': '.sqlite', 'TopoJSON': '.topojson'
+            }
+        self.driverOptions = list(self.driverOptionsDict.keys())
         #output holding variables to be called in batchConvert
         self.conversionDriver = ''
         self.inputDriver = ''
