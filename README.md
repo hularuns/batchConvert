@@ -38,7 +38,7 @@ Once the environment has been activated, in your anaconda prompt you should see:
 To run the batch convert tool, type the following within the anaconda prompt with the batchConvert environment activated.
 
 ```
-python batchConvert.py
+python convertGui.py
 ```
 
 
