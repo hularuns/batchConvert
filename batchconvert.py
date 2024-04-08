@@ -11,6 +11,7 @@ def batch_convert(input_path, outputPath, input_driver_ext, conversion_driver, c
         guiInput (object): Instance of the class containing the GUI elements. This is typically 'self' in a class method.
         inputPath (str): Directory path for files to be converted.
         outputPath (str): Directory path for converted files.
+        input_driver (str): input Driver name (GDAL)
         inputDriverExt (str): Driver name Extension (e.g. .shp) (GDAL) of input files. For list, see fiona.supported_drivers.
         conversionDriver (str): Driver name (GDAL) to convert to. For list, see fiona.supported_drivers.
         conversionDriverExt (str): Extension (e.g. .GML) (GDAL) to convert to. see convertGui.driverOptionsDict.
@@ -22,7 +23,12 @@ def batch_convert(input_path, outputPath, input_driver_ext, conversion_driver, c
         for gis_file in os.listdir(input_path):
             if gis_file.endswith(input_driver_ext):
                 full_path = os.path.join(input_path, gis_file)
-                gdf = gpd.read_file(full_path)
+                try:
+                    gdf = gpd.read_file(full_path)
+                except Exception as error:
+                    print(f"Error reading {gis_file}: {error}")
+                    continue  # Skip files that cannot be read
+                
                 #converts if conversionCrs is true, otherwise won't convert.
                 if conversion_crs:
                     gdf = gdf.to_crs(conversion_crs)
@@ -40,11 +46,23 @@ def batch_convert(input_path, outputPath, input_driver_ext, conversion_driver, c
                     output_file_name = os.path.splitext(gis_file)[0] + conversionDriverExt
                     output_full_path = os.path.join(outputPath, output_file_name)
                     # Creates and saves converted file 
-                    gdf.to_file(output_full_path, driver=str(conversion_driver))
+                    #Converts to CSV
+                    if conversion_driver == 'CSV':
+                        gdf.to_csv(output_full_path, index = False, mode='w')
+                    # if DXF just use geometries as it only accepts certain specific support fields.
+                    elif conversion_driver == 'DXF':
+                        #extracts only geometry into the gdf for the DXF
+                        gdf = gdf[['geometry']]
+                        gdf.to_file(output_full_path, driver=str(conversion_driver))
+                    # If any other type:
+                    else:
+                        gdf.to_file(output_full_path, driver=str(conversion_driver))
+                        
+                        
                     print(f"Converted {gis_file} to {conversion_driver} and saved as {output_file_name}")
     #should print errors to console
-    except Exception as e:
-        print(e)                    
+    except Exception as error:
+        print(error)                    
 
         
 

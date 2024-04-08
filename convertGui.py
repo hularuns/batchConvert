@@ -92,6 +92,8 @@ class ConvertGui:
         self.output_button.place(x=100, y=175)
         self.output_path_label = ttk.Label(self.main_window, text='No output directory selected')
         self.output_path_label.place(x=100, y=200)
+        
+        
 
     # for select input directory button.
     def select_input_directory(self):
