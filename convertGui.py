@@ -3,8 +3,6 @@
 # Add option to select which files or which depends which files are in the folder so it doesn't discriminate.
 # Make it so it can change 'any OGR file to any other OGR file'.
 
-import geopandas as gpd
-import os
 import sys
 # For GUI
 # https://stackoverflow.com/questions/3964681/find-all-files-in-a-directory-with-extension-txt-in-python
@@ -12,14 +10,13 @@ from tkinter import ttk, messagebox
 from tkinter.filedialog import askdirectory
 import tkinter as tk
 
+from batchConvertMethod import batchConvert
 
 # ---- GUI Class definition ----
 class convertGui:
-
     def __init__(self):
         # dict of formats to convert to and from with their file extension
         # Print supported drivers and their capabilities
-
         self.driverOptionsDict = {
             'DXF': '.dxf', 'CSV': '.csv', 'OpenFileGDB': '.gdb',  'ESRIJSON': '.json', 'ESRI Shapefile': '.shp', 
             'FlatGeobuf': '.fgb', 'GeoJSON': '.geojson', 'GeoJSONSeq': '.geojsons', 'GPKG': '.gpkg', 'GML': '.gml',
@@ -38,7 +35,7 @@ class convertGui:
             "EPSG:4326 - WGS 84 (Global GPS Coordinate System)",
 
         ]
-
+        
         self.driverOptions = list(self.driverOptionsDict.keys())
         self.conversionCrs = ''  # for use in batchConvert from interface choice
 
@@ -122,9 +119,9 @@ class convertGui:
             self.inputDriverExt = self.driverOptionsDict.get(self.inputDriver)
             # extracts just the EPSG value from the list. creates list of 2, fetches number.
             self.conversionCrs =self.comboCrs.get().split('-')[0].split(':')[1].strip()
-            #closes the main window when Yes.
-            self.mainWindow.destroy()
+            #Conversion calls batchConvert.py
             messagebox.showinfo(title = 'Conversion Tool', message='Conversion going ahead!')
+            batchConvert(self)
         # If select No -> False -> closes everything and stops script.
         elif messageBoxInput == False:
             self.mainWindow.destroy()
@@ -140,33 +137,4 @@ convertFrontEnd.run()
 
 # Once submit clicked, run the batch convert.
 
-def batchConvert(guiInput):
-    #Handles differently converting to geopackage.
-    
-    for file in os.listdir(guiInput.inputPath):
-        if file.endswith(guiInput.inputDriverExt):
-            fullPath = os.path.join(guiInput.inputPath, file)
-            gdf = gpd.read_file(fullPath)
-            #converts if conversionCrs is true, otherwise won't convert.
-            if guiInput.conversionCrs:
-                gdf = gdf.to_crs(guiInput.conversionCrs)
-            
-            # this section converts file type.
-            if guiInput.conversionDriver == 'GPKG':
-                outputFileName = 'Converted.gpkg' 
-                outputFullPath = os.path.join(guiInput.outputPath, outputFileName)
-                tableName = os.path.splitext(os.path.basename(file))[0] #obtains file name of each file adding as layer
-                #Create or append to geopackage, will change mode depending on if it exists or not.
-                gdf.to_file(outputFullPath, layer=tableName, driver = 'GPKG')
-                print(f"Converted {file} to {guiInput.conversionDriver} and saved as a table within {outputFileName} with CRS of {guiInput.conversionCrs}")           
-            else:
-                # file name and path creation
-                outputFileName = os.path.splitext(file)[0] + guiInput.conversionDriverExt
-                outputFullPath = os.path.join(guiInput.outputPath, outputFileName)
-                # Creates and saves converted file 
-                gdf.to_file(outputFullPath, driver=str(guiInput.conversionDriver))
-                print(f"Converted {file} to {guiInput.conversionDriver} and saved as {outputFileName}")
-        
 
-
-batchConvert(convertFrontEnd)
