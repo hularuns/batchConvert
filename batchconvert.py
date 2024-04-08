@@ -8,14 +8,12 @@ def batch_convert(input_path, outputPath, input_driver_ext, conversion_driver, c
     This function leverages the Fiona library to read, write and append data. Data can be transformed to any EPSG coordinate supported by Fiona.
 
     Args:
-        guiInput (object): Instance of the class containing the GUI elements. This is typically 'self' in a class method.
-        inputPath (str): Directory path for files to be converted.
-        outputPath (str): Directory path for converted files.
-        input_driver (str): input Driver name (GDAL)
-        inputDriverExt (str): Driver name Extension (e.g. .shp) (GDAL) of input files. For list, see fiona.supported_drivers.
-        conversionDriver (str): Driver name (GDAL) to convert to. For list, see fiona.supported_drivers.
-        conversionDriverExt (str): Extension (e.g. .GML) (GDAL) to convert to. see convertGui.driverOptionsDict.
-        conversionCrs (int): CRS (EPSG) to reproject to e.g. '4329'. 
+        input_path (str): Directory path for files to be converted.
+        output_path (str): Directory path for converted files.
+        input_driver_ext (str): Driver name Extension (e.g. .shp) (GDAL) of input files. For list, see fiona.supported_drivers.
+        cpmversion_driver (str): Driver name (GDAL) to convert to. For list, see fiona.supported_drivers.
+        conversion_driver_ext (str): Extension (e.g. .GML) (GDAL) to convert to. see convertGui.driverOptionsDict.
+        conversion_crs (int): CRS (EPSG) to reproject to e.g. '4329'. 
     """
     #Handles differently converting to geopackage.
 
