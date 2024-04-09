@@ -121,16 +121,17 @@ class ConvertGui:
             # Returns input Driver and then returns extension
             self.input_driver = self.combo_input.get()
             self.input_driver_ext = self.driver_options_dict.get(self.input_driver)
-            # extracts just the EPSG value from the dict.
-            self.conversion_choice = self.combo_input.get()
+            # extracts just the EPSG value from the dict. Get the key then get the value with the key.
+            self.conversion_choice = self.combo_crs.get()
             self.conversion_crs = self.crs_options_dict.get(self.conversion_choice)
-            
+            print(self.conversion_choice)
+            print(self.conversion_crs)
             #Conversion calls batchConvert.py
             messagebox.showinfo(title = 'Conversion Tool', message='Conversion going ahead!')
             #-----Run the batch convert tool after updating all the vars------
             batch_convert(self.input_path, self.output_path, self.input_driver, self.input_driver_ext, self.conversion_driver, self.conversion_driver_ext, self.conversion_crs)
             messagebox.showinfo(title = 'Conversion Tool', message = 'Conversion complete!')
-        # If select No -> False -> closes everything and stops script.
+        # If user selects No -> False -> closes everything and stops script.
         elif message_box_input == False:
             messagebox.showinfo(title= 'Conversion Tool', message='Conversion tool ended.')
         # If select Cancel -> None -> lets user continue and change settings.
