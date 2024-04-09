@@ -24,19 +24,21 @@ class ConvertGui:
             'OGR_GMT': '.GMT', 'GPX': '.gpx', 'Idrisi': '.rst', 'MapInfo File': '.tab',
             'DGN': '.dgn', 'PCIDSK': '.pix',  'S57': '.000', 'SQLite': '.sqlite', 'TopoJSON': '.topojson'
             }
-        self.crs_options = [
-            "EPSG:25832 - ETRS89 / UTM zone 32N (Europe)",
-            "EPSG:27700 - OSGB36 (OS Great Britain 1936)",
-            "EPSG:29902 - TM65 / Irish Grid"
-            "EPSG:32633 - WGS 84 / UTM zone 33N",
-            "EPSG:32736 - WGS 84 / UTM zone 36S",
-            "EPSG:3857 - WGS 84 / Pseudo-Mercator",         
-            "EPSG:4258 - ETRS89 / Europe",         
-            "EPSG:4269 - NAD83 (North American Datum 1983)",
-            "EPSG:4326 - WGS 84 (Global GPS Coordinate System)",
-        ]
-        
         self.driver_options = list(self.driver_options_dict.keys())
+
+        self.crs_options_dict = {
+            'ETRS89 / UTM Zone 32N (Europe) - EPSG: 25832': '25832',
+            'OSGB36 (OSGB 1936) - EPSG: 27700': '27700',
+            'TM65 / Irish Grid - EPSG: 29902': '29902',
+            'WGS 84 / UTM Zone 33N - EPSG: 32633': '32633',
+            'WGS 84 / UTM Zone 36S - EPSG: 32736': '32736',
+            'WGS 84 / Pseudo-Mercator - EPSG: 3857': '3857',
+            'ETRS89 / Europe - EPSG: 4258': '4258',
+            'NAD83 (North American Datum 1983) - EPSG: 4269': '4269',
+            'WGS 84 (Global GPS Coordinate System) - EPSG: 4326': '4326'
+            }
+        
+        self.crs_options = list(self.crs_options_dict.keys())
         self.conversion_crs = ''  # for use in batchConvert from interface choice
 
         # gui main window holding variables
@@ -119,8 +121,10 @@ class ConvertGui:
             # Returns input Driver and then returns extension
             self.input_driver = self.combo_input.get()
             self.input_driver_ext = self.driver_options_dict.get(self.input_driver)
-            # extracts just the EPSG value from the list. creates list of 2, fetches number.
-            self.conversion_crs =self.combo_crs.get().split('-')[0].split(':')[1].strip()
+            # extracts just the EPSG value from the dict.
+            self.conversion_choice = self.combo_input.get()
+            self.conversion_crs = self.crs_options_dict.get(self.conversion_choice)
+            
             #Conversion calls batchConvert.py
             messagebox.showinfo(title = 'Conversion Tool', message='Conversion going ahead!')
             #-----Run the batch convert tool after updating all the vars------

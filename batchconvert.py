@@ -29,6 +29,7 @@ def batch_convert(input_path, output_path, input_driver, input_driver_ext, conve
                     for name in fiona.listlayers(full_path):
                         gdf = gpd.read_file(full_path, layer = name)
                         print(name)
+                        print(conversion_crs)
 
                     # converts if conversionCrs is true, otherwise won't convert.
                     if conversion_crs:
