@@ -123,7 +123,8 @@ class ConvertGui:
             self.conversion_crs =self.combo_crs.get().split('-')[0].split(':')[1].strip()
             #Conversion calls batchConvert.py
             messagebox.showinfo(title = 'Conversion Tool', message='Conversion going ahead!')
-            batch_convert(self.input_path, self.output_path, self.input_driver_ext, self.conversion_driver, self.conversion_driver_ext, self.conversion_crs)
+            #-----Run the batch convert tool after updating all the vars------
+            batch_convert(self.input_path, self.output_path, self.input_driver, self.input_driver_ext, self.conversion_driver, self.conversion_driver_ext, self.conversion_crs)
             messagebox.showinfo(title = 'Conversion Tool', message = 'Conversion complete!')
         # If select No -> False -> closes everything and stops script.
         elif message_box_input == False:
