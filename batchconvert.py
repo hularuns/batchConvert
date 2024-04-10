@@ -98,9 +98,9 @@ def batch_convert(input_path, output_path, input_driver, input_driver_ext, conve
         print(error)                    
 
 #test for without GUI.
-batch_convert('C:/Users/hular/projects/batchConvert/testEnvironment/multilayer',
-              'C:/Users/hular/projects/batchConvert/testEnvironment/multilayer',
-              'GPKG',
-              '.gpkg',
-              'CSV',
-              '.csv')
+# batch_convert('C:/Users/hular/projects/batchConvert/testEnvironment/multilayer',
+#               'C:/Users/hular/projects/batchConvert/testEnvironment/multilayer',
+#               'GPKG',
+#               '.gpkg',
+#               'CSV',
+#               '.csv')
